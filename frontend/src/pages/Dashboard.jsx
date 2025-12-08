@@ -18,13 +18,32 @@ function Column({ title, tasks, accent, onStatusChange }) {
         {tasks.map((task) => (
           <div
             key={task._id}
-            className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs hover:border-indigo-400/70 hover:shadow-md transition"
-          >
-            <div className="font-medium text-slate-100 truncate">
+            className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs hover:border-indigo-400/70 hover:shadow-md transition">
+            {/* <div className="font-medium text-slate-100 truncate">
               {task.title}
+            </div> */}
+            <div className="flex justify-between gap-2 items-start">
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-slate-100 truncate">
+                  {task.title}
+                </div>
+                {task.description && (
+                  <div className="mt-1 text-[11px] text-slate-400 line-clamp-2">
+                    {task.description}
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => onDelete(task._id)}
+                className="opacity-0 group-hover:opacity-100 text-[11px] text-slate-500 hover:text-red-400 transition"
+                title="Delete task"
+              >
+                ✕
+              </button>
             </div>
-            <div className="mt-1 flex items-center justify-between text-[11px] text-slate-500">
-              <span>
+
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500 gap-2">
+              <span className="truncate">
                 {task.dueDate
                   ? `Due: ${new Date(task.dueDate).toLocaleDateString()}`
                   : "No due date"}
@@ -57,8 +76,11 @@ export default function Dashboard() {
 
   const [tasks, setTasks] = useState([]);
   const [newTitle, setNewTitle] = useState("");
+  const [newDescription, setNewDescription] = useState("");
   const [suggestion, setSuggestion] = useState("");
   const [newDueDate, setNewDueDate] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [errorText, setErrorText] = useState("");
 
   const updateSuggestion = (allTasks) => {
     const today = new Date();
@@ -96,6 +118,8 @@ export default function Dashboard() {
 
   const fetchTasks = async () => {
     if (!userId) return;
+    setLoading(true);
+    setErrorText("");
     try {
       const res = await api.get("/tasks", {
         params: { userId },
@@ -104,6 +128,9 @@ export default function Dashboard() {
       updateSuggestion(res.data);
     } catch (err) {
       console.error("Fetch tasks error", err);
+      setErrorText("Could not load tasks. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,17 +140,27 @@ export default function Dashboard() {
   }, [userId]);
 
   const handleCreateTask = async () => {
-    console.log("▶ handleCreateTask clicked");
-    console.log("newTitle =", newTitle);
-    console.log("userId =", userId);
+    // console.log("▶ handleCreateTask clicked");
+    // console.log("newTitle =", newTitle);
+    // console.log("userId =", userId);
 
-    if (!newTitle.trim() || !userId) {
-      console.log("❌ Missing title or userId, not sending request");
+    // if (!newTitle.trim() || !userId) {
+    //   console.log("❌ Missing title or userId, not sending request");
+    //   return;
+    // }
+    setErrorText("");
+    if (!newTitle.trim()) {
+      setErrorText("Task title is required.");
+      return;
+    }
+    if (!userId) {
+      setErrorText("User not found. Please log in again.");
       return;
     }
     try {
       const res = await api.post("/tasks", {
         title: newTitle,
+        description: newDescription.trim() || null,
         userId,
         status: "todo",
         dueDate: newDueDate || null,
@@ -135,11 +172,29 @@ export default function Dashboard() {
         return updated;
       });
       setNewTitle("");
+      setNewDescription("");
       setNewDueDate("");
     } catch (err) {
       console.error("Create task error", err);
+      setErrorText("Could not create task. Please try again.");
     }
   };
+
+  const handleDeleteTask = async (id) => {
+    if (!window.confirm("Delete this task?")) return;
+    try {
+      await api.delete(`/tasks/${id}`);
+      setTasks((prev) => {
+        const updated = prev.filter((t) => t._id !== id);
+        updateSuggestion(updated);
+        return updated;
+      });
+    } catch (err) {
+      console.error("Delete task error", err);
+      setErrorText("Could not delete task.");
+    }
+  };
+
 
   const handleStatusChange = async (id, newStatus) => {
     try {
@@ -151,6 +206,7 @@ export default function Dashboard() {
       });
     } catch (err) {
       console.error("Update status error", err);
+      setErrorText("Could not update task status.");
     }
   };
 
@@ -197,26 +253,70 @@ export default function Dashboard() {
         </div>
       )}
 
-      <section className="grid md:grid-cols-3 gap-3 md:gap-4">
-        <Column
-          title="To Do"
-          tasks={todo}
-          accent="bg-sky-400"
-          onStatusChange={handleStatusChange}
+      <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-2">
+        <h2 className="text-sm font-semibold text-slate-100">
+          Quick add task
+        </h2>
+        <div className="flex flex-col md:flex-row gap-2 text-xs">
+          <input
+            className="flex-1 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-100"
+            placeholder="Task title (required)…"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+          />
+          <input
+            type="date"
+            className="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-100"
+            value={newDueDate}
+            onChange={(e) => setNewDueDate(e.target.value)}
+          />
+          <button
+            onClick={handleCreateTask}
+            className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-slate-50 font-medium"
+          >
+            + Add
+          </button>
+        </div>
+        <textarea
+          className="mt-2 w-full px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-100 text-xs"
+          rows={2}
+          placeholder="Optional description…"
+          value={newDescription}
+          onChange={(e) => setNewDescription(e.target.value)}
         />
-        <Column
-          title="In Progress"
-          tasks={inProgress}
-          accent="bg-amber-400"
-          onStatusChange={handleStatusChange}
-        />
-        <Column
-          title="Done"
-          tasks={done}
-          accent="bg-emerald-400"
-          onStatusChange={handleStatusChange}
-        />
+        {errorText && (
+          <div className="text-[11px] text-red-300 mt-1">{errorText}</div>
+        )}
       </section>
+
+      {/* Columns */}
+      {loading ? (
+        <div className="text-xs text-slate-400">Loading tasks…</div>
+      ) : (
+        <section className="grid md:grid-cols-3 gap-3 md:gap-4">
+          <Column
+            title="To Do"
+            tasks={todo}
+            accent="bg-sky-400"
+            onStatusChange={handleStatusChange}
+            onDelete={handleDeleteTask}
+          />
+          <Column
+            title="In Progress"
+            tasks={inProgress}
+            accent="bg-amber-400"
+            onStatusChange={handleStatusChange}
+            onDelete={handleDeleteTask}
+          />
+          <Column
+            title="Done"
+            tasks={done}
+            accent="bg-emerald-400"
+            onStatusChange={handleStatusChange}
+            onDelete={handleDeleteTask}
+          />
+        </section>
+      )}
     </div>
   );
 }
