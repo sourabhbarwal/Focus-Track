@@ -58,6 +58,7 @@ export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [newTitle, setNewTitle] = useState("");
   const [suggestion, setSuggestion] = useState("");
+  const [newDueDate, setNewDueDate] = useState("");
 
   const updateSuggestion = (allTasks) => {
     const today = new Date();
@@ -125,6 +126,7 @@ export default function Dashboard() {
         title: newTitle,
         userId,
         status: "todo",
+        dueDate: newDueDate || null,
       });
       console.log("✅ Task created:", res.data);
       setTasks((prev) => {
@@ -133,6 +135,7 @@ export default function Dashboard() {
         return updated;
       });
       setNewTitle("");
+      setNewDueDate("");
     } catch (err) {
       console.error("Create task error", err);
     }
@@ -166,12 +169,18 @@ export default function Dashboard() {
             Plan your work across boards and track today&apos;s progress.
           </p>
         </div>
-        <div className="flex gap-2 text-xs">
+        <div className="flex flex-wrap gap-2 text-xs items-center">
           <input
             className="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-100 w-40"
             placeholder="New task title…"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
+          />
+          <input
+            type="date"
+            className="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-100"
+            value={newDueDate}
+            onChange={(e) => setNewDueDate(e.target.value)}
           />
           <button
             onClick={handleCreateTask}
