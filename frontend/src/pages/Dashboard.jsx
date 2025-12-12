@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { useAuth } from "../context/AuthContext.jsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Column({ title, tasks, accent, onStatusChange, onDelete }) {
   return (
@@ -285,11 +286,15 @@ export default function Dashboard() {
   const done = tasks.filter((t) => t.status === "done");
 
   return (
-    <div className="space-y-4">
+    <motion.div 
+      className="max-w-5xl mx-auto space-y-4"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+    >
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3 mb-4 w-full">
           <h1 className="text-2xl font-semibold text-gray-200">Dashboard</h1>
-
           <div className="ml-auto flex items-center gap-2 text-xs">
             <span className="text-gray-200">Board:</span>
             <select
@@ -315,7 +320,12 @@ export default function Dashboard() {
       )}
 
       {/* Quick add task */}
-      <section className="bg-white/70 border border-gray-200 rounded-2xl p-4 space-y-2">
+      <motion.section 
+        className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-3"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
+      >
         <h2 className="text-1X1 font-bold text-gray-900">
             QUICK ADD TASK
         </h2>
@@ -333,12 +343,12 @@ export default function Dashboard() {
             value={newTaskDueDate}
             onChange={(e) => setNewTaskDueDate(e.target.value)}
           />
-          <button
+          <motion.button
             onClick={handleCreateTask}
             className="px-3 py-1.5 rounded-xl bg-white hover:bg-gray-200 text-gray-200 font-medium"
           >
             + Add
-          </button>
+          </motion.button>
         </div>
         <textarea
           className="mt-2 w-full px-3 py-1.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-xs"
@@ -347,10 +357,19 @@ export default function Dashboard() {
           value={newTaskDescription}
           onChange={(e) => setNewTaskDescription(e.target.value)}
         />
+        <AnimatePresence>
         {errorText && (
-          <div className="text-[11px] text-red-300 mt-1">{errorText}</div>
+          <motion.div
+            className="text-xs text-red-300 bg-red-900/30 border border-red-700/50 rounded-xl px-3 py-2"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+          >
+            {errorText}
+          </motion.div>
         )}
-      </section>
+      </AnimatePresence>
+      </motion.section>
 
       {/* Columns */}
       {loading ? (
@@ -380,6 +399,6 @@ export default function Dashboard() {
           />
         </section>
       )}
-    </div>
+    </motion.div>
   );
 }

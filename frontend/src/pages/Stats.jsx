@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { api } from "../api";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 function formatDate(dateString) {
   if (!dateString) return "—";
@@ -246,7 +248,12 @@ export default function Stats() {
   }
 
   return (
-    <div className="space-y-4">
+    <motion.div 
+      className="max-w-5xl mx-auto space-y-4"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+    >
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
           <h1 className="text-xl md:text-2xl font-semibold text-gray-300">
@@ -281,18 +288,30 @@ export default function Stats() {
         <span className="text-gray-300 text-[11px]">{scopeLabel}</span>.
       </div>
 
-      {errorText && (
-        <div className="text-xs text-red-300 bg-red-900/30 border border-red-700/50 rounded-xl px-3 py-2">
-          {errorText}
-        </div>
-      )}
+      <AnimatePresence>
+        {errorText && (
+          <motion.div
+            className="text-xs text-red-300 bg-red-900/30 border border-red-700/50 rounded-xl px-3 py-2"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+          >
+            {errorText}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {loading ? (
         <div className="text-xs text-gray-500">Loading stats…</div>
       ) : (
         <>
           {/* Top summary cards */}
-          <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <motion.section 
+            className="grid grid-cols-2 md:grid-cols-4 gap-3"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
+          >
             <div className="  border border-gray-200/80 rounded-2xl p-3 flex flex-col gap-1">
               <span className="text-[11px] uppercase tracking-wide text-gray-900">
                 Total tasks
@@ -328,10 +347,15 @@ export default function Stats() {
                 {overdueTasks}
               </span>
             </div>
-          </section>
+          </motion.section>
 
           {/* Completion & score */}
-          <section className="grid md:grid-cols-2 gap-3">
+          <motion.section 
+            className="grid grid-cols-2 md:grid-cols-4 gap-3"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
+          >
             <div className=" border border-gray-500/80 rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-gray-900">
@@ -384,7 +408,7 @@ export default function Stats() {
                 </div>
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* Last 7 days activity */}
           <section className="border border-gray-500/80 rounded-2xl p-4 space-y-3">
@@ -565,6 +589,6 @@ export default function Stats() {
           </section>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }

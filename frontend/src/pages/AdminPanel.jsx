@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { api } from "../api";
+import {motion, AnimatePresence} from "framer-motion";
 
 export default function AdminPanel() {
   const { user } = useAuth();
@@ -192,8 +193,11 @@ export default function AdminPanel() {
       <style>{modalAnimations}</style>
 
       {/* Background content with smooth zoom + blur when modal open */}
-      <div
+      <motion.div
         className="max-w-5xl mx-auto space-y-4"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
         style={{
           transform: anyModalOpen ? "scale(0.98)" : "scale(1)",
           filter: anyModalOpen ? "blur(1px)" : "none",
@@ -210,14 +214,22 @@ export default function AdminPanel() {
         </header>
 
         {errorText && (
-          <div className="text-xs text-red-300 bg-red-900/30 border border-red-700/50 rounded-xl px-3 py-2">
+          <motion.div
+            className="text-xs text-red-300 bg-red-900/30 border border-red-700/50 rounded-xl px-3 py-2"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             {errorText}
-          </div>
+          </motion.div>
         )}
         {successText && (
-          <div className="text-xs text-emerald-300 bg-emerald-900/20 border border-emerald-700/40 rounded-xl px-3 py-2">
+          <motion.div
+            className="text-xs text-emerald-300 bg-emerald-900/20 border border-emerald-700/40 rounded-xl px-3 py-2"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             {successText}
-          </div>
+          </motion.div>
         )}
 
         {loading ? (
@@ -227,7 +239,12 @@ export default function AdminPanel() {
         ) : (
           <>
             {/* Create team from users */}
-            <section className="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
+            <motion.section 
+            className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+            >
               <h2 className="text-1xl font-bold text-gray-700 mb-2">
                 CREATE TEAM FROM REGISTERED USERS
               </h2>
@@ -264,9 +281,11 @@ export default function AdminPanel() {
                     ) : (
                       <ul className="divide-y divide-slate-300 text-xs md:text-sm">
                         {users.map((u) => (
-                          <li
-                            key={u.firebaseUid}
-                            className="flex items-center gap-4 px-4 py-2 hover:bg-gray-300/60"
+                          <motion.li
+                            className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-3"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.2, delay: 0.05 }}
                           >
                             <input
                               type="checkbox"
@@ -290,25 +309,31 @@ export default function AdminPanel() {
                                 {u.email}
                               </div>
                             </div>
-                          </li>
+                          </motion.li>
                         ))}
                       </ul>
                     )}
                   </div>
                 </div>
 
-                <button
+                <motion.button
                   type="submit"
                   disabled={creating}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-gray-200 font-medium text-xs md:text-sm"
+                  whileTap={{ scale: 0.97 }}
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-slate-50 font-medium text-xs md:text-sm"
                 >
                   {creating ? "Creating team…" : "Create team"}
-                </button>
+                </motion.button>
               </form>
-            </section>
+            </motion.section>
 
             {/* Team list – all teams visible to every admin */}
-            <section className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2">
+            <motion.section 
+              className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-2"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
+            >
               <h2 className="text-1xl font-bold text-gray-700 mb-1">
                 ALL TEAMS
               </h2>
@@ -319,10 +344,18 @@ export default function AdminPanel() {
               ) : (
                 <ul className="space-y-2 text-xs md:text-sm">
                   {teams.map((t) => (
-                    <li
+                    <motion.li
                       key={t._id}
-                      className="border border-gray-200 rounded-xl px-3 py-2 flex items-center justify-between cursor-pointer hover:border-indigo-900/90 hover:bg-white transition"
-                      onClick={() => openTeamDetails(t)}
+                        className="border border-slate-800 rounded-xl px-3 py-2 flex items-center justify-between cursor-pointer hover:border-indigo-500/60 hover:bg-slate-900/80 transition"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.18,
+                          delay: 0.03 * index,
+                        }}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        onClick={() => openTeamDetails(t)}
                     >
                       <div>
                         <div className="font-medium text-gray-900 flex items-center gap-2">
@@ -346,27 +379,42 @@ export default function AdminPanel() {
                             : "-"}
                         </div>
                       </div>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               )}
-            </section>
+            </motion.section>
           </>
         )}
-      </div>
+      </motion.div>
 
       {/* ─────────────────────────────────────
           Team details popup (VIEW ONLY)
           ───────────────────────────────────── */}
+      <AnimatePresence>
       {showDetailsModal && (
-        <div
-          onClick={closeTeamModal}
-          className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-50 modal-fade-in"
+        <motion.div
+          key="details-modal"
+            onClick={closeTeamModal}
+            className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
         >
-          <div
+          <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white border border-gray-300 rounded-2xl shadow-2xl w-full max-w-4xl p-6 modal-slide-up"
+              className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-4xl p-6 relative"
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.96 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
           >
+            <button
+                onClick={closeAllModals}
+                className="absolute top-3 right-4 text-slate-400 hover:text-slate-200 text-lg"
+              >
+                ✕
+              </button>
             {detailsLoading || !teamDetails ? (
               <div className="text-sm text-gray-500">
                 Loading team details…
@@ -389,12 +437,13 @@ export default function AdminPanel() {
 
                   <div className="flex items-center gap-2">
                     {canEditActiveTeam && (
-                      <button
+                      <motion.button
                         onClick={() => setShowEditModal(true)}
-                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-gray-200 text-xs md:text-sm"
+                        whileTap={{ scale: 0.97 }}
+                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-slate-50 text-xs md:text-sm"
                       >
                         Edit details
-                      </button>
+                      </motion.button>
                     )}
                     <button
                       onClick={closeTeamModal}
@@ -417,14 +466,16 @@ export default function AdminPanel() {
                     </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
-                    <div
+                    <motion.div
                       className="h-2 bg-emerald-500"
-                      style={{
+                      initial={{ width: 0 }}
+                      animate={{
                         width: `${
                           teamDetails.stats?.progressPercent || 0
                         }%`,
                       }}
-                    ></div>
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                    />
                   </div>
                 </div>
 
@@ -610,13 +661,15 @@ export default function AdminPanel() {
                 </div>
               </>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* ─────────────────────────────────────
           Edit Team popup (name + members)
           ───────────────────────────────────── */}
+      <AnimatePresence>
       {showEditModal && teamDetails && canEditActiveTeam && (
         <TeamEditModal
           details={teamDetails}
@@ -639,6 +692,7 @@ export default function AdminPanel() {
           }}
         />
       )}
+      </AnimatePresence>
     </>
   );
 }
@@ -698,13 +752,20 @@ function TeamEditModal({
   };
 
   return (
-    <div
+    <motion.div
       onClick={onClose}
-      className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-60 modal-fade-in"
+      className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-60"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
     >
-      <div
+      <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-gray-300 rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-scale-in"
+        className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg p-6 relative"
+        initial={{ opacity: 0, y: 40, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 40, scale: 0.96 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
       >
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-gray-900">
@@ -781,16 +842,17 @@ function TeamEditModal({
             >
               Cancel
             </button>
-            <button
+            <motion.button
               onClick={handleSave}
               disabled={saving}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-gray-900 font-medium text-xs md:text-sm"
+              whileTap={{ scale: 0.97 }}
+              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-slate-50 font-medium text-xs md:text-sm"
             >
               {saving ? "Saving…" : "Save changes"}
-            </button>
+            </motion.button>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

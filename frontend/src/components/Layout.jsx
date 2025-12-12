@@ -4,11 +4,14 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { logout } from "../firebase";
 import { api } from "../api";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 const navLinkBase =
   "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition";
 const navLinkInactive = "text-slate-300 hover:bg-slate-700/60";
 const navLinkActive = "bg-slate-700 text-white shadow";
+
 
 function NavLinks({ onNavigate, isAdmin }) {
   return (
@@ -91,10 +94,20 @@ export default function Layout({ children }) {
 
   const closeMobile = () => setMobileOpen(false);
   const todayLabel = new Date().toLocaleDateString();
+  const pageVariants = {
+    initial: { opacity: 0, y: 12 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+  };
   return (
     <div className="min-h-screen w-screen flex bg-slate-900 text-slate-100 overflow-hidden">
       {/* Sidebar (desktop) */}
-      <aside className="hidden md:flex flex-col w-60 border-r border-slate-800 bg-slate-950/70 shrink-0">
+      <motion.aside 
+        className="hidden md:flex flex-col w-64 border-r border-slate-800 bg-slate-950/80 backdrop-blur-xl"
+        initial={{ x: -40, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+      >
         {/* Profile */}
         <div className="px-5 py-4 border-b border-slate-800 flex items-center gap-3">
           {avatarUrl ? (
@@ -109,7 +122,6 @@ export default function Layout({ children }) {
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold truncate">{displayName}</div>
             <div className="text-[11px] text-slate-400 truncate">
               {user?.email}
             </div>
@@ -125,7 +137,6 @@ export default function Layout({ children }) {
 
         {/* Bottom area */}
         <div className="px-4 py-3 border-t border-slate-800 text-xs text-slate-400">
-          
           <button
             onClick={handleLogout}
             className="mt-2 text-[11px] px-2 py-1 rounded-lg border border-slate-700 hover:border-red-400 hover:text-red-300"
@@ -133,12 +144,17 @@ export default function Layout({ children }) {
             Logout
           </button>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Main area */}
       <div className="flex flex-col flex-1 w-full h-full overflow-hidden">
         {/* Top bar */}
-        <header className="h-14 flex items-center justify-between px-4 md:px-6 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+        <motion.header 
+          className="md:hidden px-4 py-3 border-b border-slate-800 bg-slate-950/90 backdrop-blur-xl flex items-center justify-between"
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+        >
           <div className="flex items-center gap-3">
             {/* Mobile menu */}
             <button
@@ -174,7 +190,7 @@ export default function Layout({ children }) {
               
             </div>            
           </div>
-        </header>
+        </motion.header>
 
         {/* Page content */}
         <main className="flex-1 w-full h-full overflow-y-auto p-4 md:p-6 bg-slate-900">
@@ -204,9 +220,6 @@ export default function Layout({ children }) {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold truncate">
-                  {displayName}
-                </div>
                 {user?.role && (
                   <div className="text-[10px] text-emerald-300 mt-0.5">
                     Role: {user.role}
