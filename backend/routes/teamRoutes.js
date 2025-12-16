@@ -1,4 +1,4 @@
-//backend/routes/teams.js
+//backend/routes/teamRoutes.js
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
