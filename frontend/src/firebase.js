@@ -1,7 +1,7 @@
 // frontend/src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, setPersistence,browserLocalPersistence,
-  createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAL2z3ETmp_HpvBE7E5niDn-uqqy-f5s9k",
@@ -27,6 +27,7 @@ export {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 };
 
 export const logout = () => signOut(auth);

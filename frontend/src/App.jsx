@@ -13,7 +13,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-300 via-purple-200 to-blue-200 text-slate-100 flex items-center justify-center">
         Loading...
       </div>
     );

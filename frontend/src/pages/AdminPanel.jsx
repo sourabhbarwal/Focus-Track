@@ -191,10 +191,10 @@ export default function AdminPanel() {
   return (
     <>
       <style>{modalAnimations}</style>
-
+      <div className="min-h-screen bg-linear-to-br from-indigo-300 via-purple-200 to-blue-200 p-6">
       {/* Background content with smooth zoom + blur when modal open */}
       <motion.div
-        className="max-w-5xl mx-auto space-y-4"
+        className="max-w-5xl mx-auto space-y-4 "
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
@@ -205,17 +205,17 @@ export default function AdminPanel() {
         }}
       >
         <header>
-          <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
+          <h1 className="text-2xl font-bold text-indigo-700">
             Admin Panel
           </h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-1">
+          <p className="text-xs text-gray-600 mt-3">
             Manage users, teams and see an overview of activity.
           </p>
         </header>
 
         {errorText && (
           <motion.div
-            className="text-xs text-red-300 bg-red-900/30 border border-red-700/50 rounded-xl px-3 py-2"
+            className="text-xs text-red-500 bg-red-200 border border-red-700/50 rounded-xl px-3 py-2"
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -238,104 +238,15 @@ export default function AdminPanel() {
           </div>
         ) : (
           <>
-            {/* Create team from users */}
-            <motion.section 
-            className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-3"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: 0.05 }}
-            >
-              <h2 className="text-1xl font-bold text-gray-700 mb-2">
-                CREATE TEAM FROM REGISTERED USERS
-              </h2>
-
-              <form
-                className="space-y-3 text-xs md:text-sm"
-                onSubmit={handleCreateTeam}
-              >
-                <div className="space-y-1">
-                  <label className="block text-gray-700">Team name</label>
-                  <input
-                    className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-gray-50 text-gray-900 text-xs md:text-sm"
-                    placeholder="e.g. Final Year Project Squad"
-                    value={teamName}
-                    onChange={(e) => setTeamName(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-700 text-shadow-amber-50 md:text-sm">
-                      Select members
-                    </span>
-                    <span className="text-[14px] text-gray-500">
-                      {selected.size} selected
-                    </span>
-                  </div>
-
-                  <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-xl">
-                    {users.length === 0 ? (
-                      <div className="p-3 text-xs text-gray-500">
-                        No users registered yet.
-                      </div>
-                    ) : (
-                      <ul className="divide-y divide-slate-300 text-xs md:text-sm">
-                        {users.map((u) => (
-                          <motion.li
-                            className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-3"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.2, delay: 0.05 }}
-                          >
-                            <input
-                              type="checkbox"
-                              className="w-4 h-4"
-                              checked={selected.has(u.firebaseUid)}
-                              onChange={() => toggleSelect(u.firebaseUid)}
-                              disabled={u.firebaseUid === adminFirebaseUid}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-3">
-                                <span className="font-medium text-gray-700 truncate">
-                                  {u.name || u.email}
-                                </span>
-                                {u.role === "admin" && (
-                                  <span className="px-1.5 py-0.5 rounded-full bg-white text-[10px] text-indigo-800 border border-indigo-800/50">
-                                    admin
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-[11px] text-gray-500 truncate">
-                                {u.email}
-                              </div>
-                            </div>
-                          </motion.li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-
-                <motion.button
-                  type="submit"
-                  disabled={creating}
-                  whileTap={{ scale: 0.97 }}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-slate-50 font-medium text-xs md:text-sm"
-                >
-                  {creating ? "Creating team…" : "Create team"}
-                </motion.button>
-              </form>
-            </motion.section>
-
             {/* Team list – all teams visible to every admin */}
             <motion.section 
-              className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-2"
+              className="bg-white/40 rounded-2xl p-4 space-y-2"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: 0.1 }}
             >
-              <h2 className="text-1xl font-bold text-gray-700 mb-1">
-                ALL TEAMS
+              <h2 className="text-[15px] font-bold text-indigo-400 mb-2">
+                All Teams
               </h2>
               {teams.length === 0 ? (
                 <div className="text-xs text-gray-500">
@@ -343,10 +254,10 @@ export default function AdminPanel() {
                 </div>
               ) : (
                 <ul className="space-y-2 text-xs md:text-sm">
-                  {teams.map((t) => (
+                  {teams.map((t,index) => (
                     <motion.li
                       key={t._id}
-                        className="border border-slate-800 rounded-xl px-3 py-2 flex items-center justify-between cursor-pointer hover:border-indigo-500/60 hover:bg-slate-900/80 transition"
+                        className="border border-indigo-600/60 bg-indigo-200 rounded-xl px-3 py-2 flex items-center justify-between cursor-pointer hover:border-indigo-600/60 hover:bg-indigo-300 transition"
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
@@ -358,20 +269,20 @@ export default function AdminPanel() {
                         onClick={() => openTeamDetails(t)}
                     >
                       <div>
-                        <div className="font-medium text-gray-900 flex items-center gap-2">
+                        <div className="font-medium text-gray-700 flex items-center gap-3 py-1">
                           {t.name}
                           {t.adminFirebaseUid === adminFirebaseUid && (
-                            <span className="px-1.5 py-0.5 rounded-full bg-white text-[10px] text-indigo-800 border border-indigo-800/50">
+                            <span className="px-1.5 py-0.5 rounded-full bg-white/50 text-[10px] text-indigo-800 border border-indigo-900/90">
                               you are admin
                             </span>
                           )}
                         </div>
-                        <div className="text-[11px] text-gray-500">
+                        <div className="text-[10px] text-gray-600">
                           Team ID:{" "}
                           <span className="font-mono">{t._id}</span>
                         </div>
                       </div>
-                      <div className="text-[11px] text-gray-500 text-right">
+                      <div className="text-[11px] text-gray-600 text-right">
                         <div>
                           Created:{" "}
                           {t.createdAt
@@ -384,6 +295,104 @@ export default function AdminPanel() {
                 </ul>
               )}
             </motion.section>
+
+            {/* Create team from users */}
+            <motion.section 
+              className="bg-white/40 rounded-2xl p-4 space-y-3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+            >
+              <h2 className="text-[15px] font-bold text-indigo-400 mb-2">
+                Create Team from Registered Users
+              </h2>
+
+              <motion.form
+                initial={{ opacity: 1, x: 0 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, y: 0 }}
+                transition={{ duration: 0.75 }}
+                className="space-y-4 text-sm"
+                onSubmit={handleCreateTeam}
+              >
+                <div className="space-y-1">
+                  <label className="block font-bold text-gray-500">Team name</label>
+                  <motion.input
+                    whileFocus={{ scale: 1 }}
+                    transition={{ duration: 0.15 }}
+                    type="text"
+                    placeholder="Enter a Team Name"
+                    required
+                    className="w-full px-4 py-2 rounded-xl border  text-indigo-500 focus:ring focus:ring-indigo-400 "
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500 block font-bold">
+                      Select members
+                    </span>
+                    <span className="text-[14px] font-bold text-gray-500">
+                      {selected.size} selected
+                    </span>
+                  </div>
+
+                  <div className="max-h-60 overflow-y-auto rounded-xl">
+                    {users.length === 0 ? (
+                      <div className="p-3 text-xs text-gray-500">
+                        No users registered yet.
+                      </div>
+                    ) : (
+                      <ul className="text-xs md:text-sm">
+                        {users.map((u) => (
+                          <label
+                            key={u.firebaseUid}
+                            className="flex items-center gap-3 p-2 rounded-xl hover:bg-indigo-200/60 cursor-pointer"
+                            //className="flex items-center gap-3 p-2 rounded-xl bg-slate-800 hover:bg-slate-700 cursor-pointer"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.2, delay: 0.05 }}
+                          >
+                            <input
+                              type="checkbox"
+                              className="w-4 h-4"
+                              checked={selected.has(u.firebaseUid)}
+                              onChange={() => toggleSelect(u.firebaseUid)}
+                              disabled={u.firebaseUid === adminFirebaseUid}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-gray-600 truncate">
+                                  {u.name}
+                                </span>
+                                {u.role === "admin" && (
+                                  <span className="px-1.5 py-0.5 rounded-full bg-indigo-400/20 text-[10px] text-indigo-600 border border-indigo-500/50">
+                                    admin
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </label>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 1 }}
+                  type="submit"
+                  disabled={creating}
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-400 font-medium transition md:text-sm cursor-pointer"
+                >
+                  {creating ? "Creating team…" : "Create team"}
+                </motion.button>
+              </motion.form>
+            </motion.section>
+
           </>
         )}
       </motion.div>
@@ -396,25 +405,19 @@ export default function AdminPanel() {
         <motion.div
           key="details-modal"
             onClick={closeTeamModal}
-            className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
         >
           <motion.div
             onClick={(e) => e.stopPropagation()}
-              className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-4xl p-6 relative"
+              className="bg-white/70 rounded-2xl shadow-2xl w-full max-w-4xl p-6 relative"
               initial={{ opacity: 0, y: 40, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 40, scale: 0.96 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
           >
-            <button
-                onClick={closeAllModals}
-                className="absolute top-3 right-4 text-slate-400 hover:text-slate-200 text-lg"
-              >
-                ✕
-              </button>
             {detailsLoading || !teamDetails ? (
               <div className="text-sm text-gray-500">
                 Loading team details…
@@ -424,12 +427,12 @@ export default function AdminPanel() {
                 {/* Header – Edit + Close on right, no overlap */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-700">
+                    <h2 className="text-2xl font-bold text-indigo-600">
                       {teamDetails.team?.name || "Team"}
                     </h2>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-600">
                       Team ID:{" "}
-                      <span className="font-light">
+                      <span >
                         {teamDetails.team?._id}
                       </span>
                     </p>
@@ -438,16 +441,17 @@ export default function AdminPanel() {
                   <div className="flex items-center gap-2">
                     {canEditActiveTeam && (
                       <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 1 }}
                         onClick={() => setShowEditModal(true)}
-                        whileTap={{ scale: 0.97 }}
-                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-slate-50 text-xs md:text-sm"
+                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-400 font-medium transition md:text-sm cursor-pointer"
                       >
                         Edit details
                       </motion.button>
                     )}
                     <button
                       onClick={closeTeamModal}
-                      className="w-8 h-8 flex items-center justify-center rounded-full bg-white hover:bg-white text-gray-200 text-sm"
+                      className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/50 text-gray-900 text-sm cursor-pointer"
                       aria-label="Close"
                     >
                       ✕
@@ -465,9 +469,9 @@ export default function AdminPanel() {
                       {teamDetails.stats?.progressPercent || 0}%)
                     </span>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
+                  <div className="w-full h-2 rounded-full bg-white overflow-hidden">
                     <motion.div
-                      className="h-2 bg-emerald-500"
+                      className="h-2 bg-emerald-600"
                       initial={{ width: 0 }}
                       animate={{
                         width: `${
@@ -482,8 +486,8 @@ export default function AdminPanel() {
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Members list */}
                   <div>
-                    <h3 className="text-1x1 font-bold text-gray-800 mb-2">
-                      MEMBERS
+                    <h3 className="text-1x1 font-bold text-gray-600 mb-2">
+                      Members
                     </h3>
                     {teamDetails.users?.length === 0 ? (
                       <div className="text-[11px] text-gray-500">
@@ -494,17 +498,14 @@ export default function AdminPanel() {
                         {teamDetails.users.map((m) => (
                           <li
                             key={m.firebaseUid}
-                            className="flex items-center justify-between border border-gray-200 rounded-lg px-3 py-1.5"
+                            className="flex items-center justify-between bg-indigo-200 rounded-xl px-3 py-2"
                           >
                             <div className="flex flex-col">
                               <span className="text-gray-900">
-                                {m.name || m.email}
-                              </span>
-                              <span className="text-gray-500">
-                                {m.email}
+                                {m.name}
                               </span>
                             </div>
-                            <span className="px-2 py-0.5 rounded-full bg-white text-gray-800 text-[10px]">
+                            <span className="px-2 py-0.5 rounded-full bg-white/60 text-gray-700 text-[11px]">
                               {m.role}
                             </span>
                           </li>
@@ -515,8 +516,8 @@ export default function AdminPanel() {
 
                   {/* Team tasks with creator + completer */}
                   <div>
-                    <h3 className="text-1x1 font-bold text-gray-800 mb-2">
-                      TEAM TASKS
+                    <h3 className="text-1x1 font-bold text-gray-600 mb-2">
+                      Team Tasks
                     </h3>
                     {(() => {
                       const tasks = teamDetails.tasks || [];
@@ -578,7 +579,7 @@ export default function AdminPanel() {
                             return (
                               <li
                                 key={t._id}
-                                className="border border-gray-200 rounded-lg px-3 py-2 flex flex-col gap-1"
+                                className="bg-indigo-200 rounded-lg px-3 py-2 flex flex-col gap-1"
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div>
@@ -597,7 +598,7 @@ export default function AdminPanel() {
                                         ? "bg-emerald-500/20 text-emerald-300"
                                         : t.status === "in-progress"
                                         ? "bg-amber-500/20 text-amber-300"
-                                        : "bg-gray-200/50 text-gray-700"
+                                        : "bg-gray-900/60 text-gray-300"
                                     }`}
                                   >
                                     {t.status}
@@ -693,6 +694,7 @@ export default function AdminPanel() {
         />
       )}
       </AnimatePresence>
+      </div>
     </>
   );
 }
@@ -754,14 +756,15 @@ function TeamEditModal({
   return (
     <motion.div
       onClick={onClose}
-      className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-60"
+      className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-60"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg p-6 relative"
+        className="bg-white/80 backdrop-blur-sm inset-0 rounded-2xl shadow-2xl w-full max-w-lg p-6 relative"
+        //className="fixed inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center z-50"
         initial={{ opacity: 0, y: 40, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 40, scale: 0.96 }}
@@ -773,7 +776,7 @@ function TeamEditModal({
           </h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-200 text-gray-700 text-sm"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/50 text-gray-900 text-sm cursor-pointer"
             aria-label="Close"
           >
             ✕
@@ -784,7 +787,12 @@ function TeamEditModal({
           <div className="space-y-1">
             <label className="block text-gray-700">Team name</label>
             <input
-              className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-gray-50 text-gray-900 text-xs md:text-sm"
+              whilefocus={{ scale: 1 }}
+              transition={{ duration: 0.15 }}
+              type="text"
+              placeholder="Enter a Team Name"
+              required
+              className="w-full px-4 py-2 rounded-xl border  text-indigo-500 focus:ring focus:ring-indigo-400 "
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -793,19 +801,20 @@ function TeamEditModal({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-gray-700">Edit members</span>
-              <span className="text-[11px] text-gray-500">
+              <span className="text-[11px] text-gray-700">
                 {selectedMembers.size} selected
               </span>
             </div>
 
-            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-xl">
-              <ul className="divide-y divide-slate-800 text-xs md:text-sm">
+            <div className="max-h-48 overflow-y-auto  rounded-xl">
+              <ul className="divide-y text-xs md:text-sm">
                 {allUsers.map((u) => {
                   const checked = selectedMembers.has(u.firebaseUid);
                   return (
-                    <li
+                    <label
                       key={u.firebaseUid}
-                      className="flex items-center gap-3 px-3 py-2 hover:bg-gray-200/60"
+                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-indigo-200/60 cursor-pointer"
+                      //className="flex items-center gap-3 p-2 rounded-xl bg-slate-800 hover:bg-slate-700 cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -815,20 +824,17 @@ function TeamEditModal({
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-900 truncate">
-                            {u.name || u.email}
+                          <span className="font-medium text-gray-600 truncate">
+                            {u.name}
                           </span>
                           {u.role === "admin" && (
-                            <span className="px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-[10px] text-indigo-200 border border-indigo-500/50">
+                            <span className="px-1.5 py-0.5 rounded-full bg-indigo-400/20 text-[10px] text-indigo-600 border border-indigo-500/50">
                               admin
                             </span>
                           )}
                         </div>
-                        <div className="text-[11px] text-gray-500 truncate">
-                          {u.email}
-                        </div>
                       </div>
-                    </li>
+                    </label>
                   );
                 })}
               </ul>
@@ -836,17 +842,20 @@ function TeamEditModal({
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 1 }}
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-200 text-gray-900 text-xs md:text-sm"
+              className="px-4 py-2 rounded-xl bg-gray-600 hover:bg-gray-400 font-medium transitionmd:text-sm cursor-pointer"
             >
               Cancel
-            </button>
+            </motion.button>
             <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 1 }}
               onClick={handleSave}
               disabled={saving}
-              whileTap={{ scale: 0.97 }}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-slate-50 font-medium text-xs md:text-sm"
+              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-400 font-medium transition md:text-sm cursor-pointer"
             >
               {saving ? "Saving…" : "Save changes"}
             </motion.button>

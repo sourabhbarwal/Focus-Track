@@ -248,30 +248,30 @@ export default function Stats() {
   }
 
   return (
+    <div className="min-h-screen bg-linear-to-br from-indigo-300 via-purple-200 to-blue-200 p-6">
     <motion.div 
       className="max-w-5xl mx-auto space-y-4"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-xl md:text-2xl font-semibold text-gray-300">
+          <h1 className="text-2xl font-bold text-indigo-700">
             Stats & Insights
           </h1>
-          <p className="text-xs md:text-sm text-gray-400 mt-1">
+          <p className="text-xs text-gray-600 mt-3">
             See how you&apos;ve been working over time and how efficiently you
             complete tasks.
           </p>
         </div>
 
         {/* Scope selector: personal vs team */}
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-gray-300">Scope:</span>
-          <select
+          <motion.select
             value={selectedScope}
             onChange={(e) => setSelectedScope(e.target.value)}
-            className="px-2 py-1 rounded-lg border border-gray-100 text-gray-300 text-xs"
+            className="rounded-xl px-4 py-2 bg-white/40 text-indigo-600 cursor-pointer"
+            whileFocus={{ scale: 1.05 }}
           >
             <option value="personal">Personal</option>
             {teams.map((t) => (
@@ -279,13 +279,12 @@ export default function Stats() {
                 Team: {t.name}
               </option>
             ))}
-          </select>
-        </div>
+          </motion.select>
       </header>
 
-      <div className="text-[11px] text-gray-300">
+      <div className="text-[15px] text-gray-600 font-semibold">
         Currently viewing stats for{" "}
-        <span className="text-gray-300 text-[11px]">{scopeLabel}</span>.
+        <span className="text-gray-800 text-[15px]">{scopeLabel}</span>.
       </div>
 
       <AnimatePresence>
@@ -302,7 +301,7 @@ export default function Stats() {
       </AnimatePresence>
 
       {loading ? (
-        <div className="text-xs text-gray-500">Loading stats…</div>
+        <div className="text-xs text-gray-700">Loading stats…</div>
       ) : (
         <>
           {/* Top summary cards */}
@@ -312,38 +311,38 @@ export default function Stats() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: 0.05 }}
           >
-            <div className="  border border-gray-200/80 rounded-2xl p-3 flex flex-col gap-1">
-              <span className="text-[11px] uppercase tracking-wide text-gray-900">
+            <div className="rounded-2xl p-3 flex flex-col gap-1 bg-white/40">
+              <span className=" text-[11px] font-bold uppercase tracking-wide text-gray-600">
                 Total tasks
               </span>
-              <span className="text-lg font-semibold text-gray-900">
+              <span className="text-lg font-semibold text-gray-700">
                 {totalTasks}
               </span>
             </div>
 
-            <div className=" border border-emerald-500/80 rounded-2xl p-3 flex flex-col gap-1">
-              <span className="text-[11px] uppercase tracking-wide text-emerald-900/80">
+            <div className=" rounded-2xl p-3 flex flex-col gap-1 bg-emerald-100">
+              <span className=" text-[11px] uppercase font-bold tracking-wide text-emerald-600">
                 Completed
               </span>
-              <span className="text-lg font-semibold text-emerald-900">
+              <span className="text-lg font-semibold text-emerald-700">
                 {completedTasks}
               </span>
             </div>
 
-            <div className=" border border-amber-500/80 rounded-2xl p-3 flex flex-col gap-1">
-              <span className="text-[11px] uppercase tracking-wide text-amber-900/80">
+            <div className="rounded-2xl p-3 flex flex-col gap-1 bg-amber-100">
+              <span className="text-[11px] font-bold uppercase tracking-wide text-amber-600">
                 Pending
               </span>
-              <span className="text-lg font-semibold text-amber-900">
+              <span className="text-lg font-semibold text-amber-700">
                 {pendingTasks}
               </span>
             </div>
 
-            <div className="border border-rose-500/80 rounded-2xl p-3 flex flex-col gap-1">
-              <span className="text-[11px] uppercase tracking-wide text-rose-900/80">
+            <div className="rounded-2xl p-3 flex flex-col gap-1 bg-rose-100">
+              <span className="text-[11px] font-bold uppercase tracking-wide text-rose-600">
                 Overdue
               </span>
-              <span className="text-lg font-semibold text-rose-900">
+              <span className="text-lg font-semibold text-rose-700">
                 {overdueTasks}
               </span>
             </div>
@@ -356,46 +355,46 @@ export default function Stats() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: 0.05 }}
           >
-            <div className=" border border-gray-500/80 rounded-2xl p-4 space-y-3">
+            <div className="bg-white/60 rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-semibold text-indigo-400">
                   Completion rate
                 </span>
-                <span className="text-xs text-gray-300">
+                <span className="text-xs text-gray-500">
                   {completedTasks}/{totalTasks} tasks done
                 </span>
               </div>
-              <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
+              <div className="w-full h-2 rounded-full bg-white overflow-hidden">
                 <div
-                  className="h-2 bg-emerald-500"
+                  className="h-2 bg-emerald-600"
                   style={{ width: `${completionRate}%` }}
                 ></div>
               </div>
-              <div className="text-xl font-semibold text-gray-900">
+              <div className="text-xl font-semibold text-indigo-400">
                 {completionRate}%
               </div>
               <p className="text-xs text-gray-500">
                 Try to keep your completion rate above{" "}
-                <span className="text-gray-500 font-bold ">70%</span> for a
+                <span className="text-gray-600 font-bold">70%</span> for a
                 strong productivity streak.
               </p>
             </div>
 
-            <div className=" border border-gray-500/80 rounded-2xl p-4 space-y-3">
+            <div className=" bg-white/60 rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-semibold text-indigo-400">
                   Average completion score
                 </span>
-                <span className="text-xs text-gray-300">
+                <span className="text-xs text-gray-500">
                   (based on how early or late you finish)
                 </span>
               </div>
-              <div className="flex items-end gap-3">
+              <div className="flex items-end gap-6">
                 <div>
-                  <div className="text-3xl font-semibold text-indigo-800 leading-none">
+                  <div className="text-3xl font-semibold text-indigo-700 leading-none">
                     {averageScore}
                   </div>
-                  <div className="text-[11px] text-indigo-200 mt-1">
+                  <div className="text-[11px] text-indigo-400 mt-1">
                     out of 10
                   </div>
                 </div>
@@ -411,12 +410,12 @@ export default function Stats() {
           </motion.section>
 
           {/* Last 7 days activity */}
-          <section className="border border-gray-500/80 rounded-2xl p-4 space-y-3">
+          <section className="bg-white/60 rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-gray-900">
+              <span className="text-sm font-semibold text-indigo-400">
                 Last 7 days activity
               </span>
-              <span className="text-xs text-gray-300">
+              <span className="text-xs text-gray-500">
                 Completed tasks per day
               </span>
             </div>
@@ -435,15 +434,15 @@ export default function Stats() {
                   >
                     <div className="h-10 flex items-end">
                       <div
-                        className="w-3 rounded-full bg-indigo-800"
+                        className="w-3 rounded-full bg-indigo-700"
                         style={{ height: `${height}px` }}
                         title={`${d.count} completed`}
                       ></div>
                     </div>
-                    <span className="text-[10px] text-gray-300">
+                    <span className="text-[12px] font-bold text-gray-500">
                       {d.label}
                     </span>
-                    <span className="text-[10px] text-gray-400">
+                    <span className="text-[11px] text-gray-500">
                       {d.count}
                     </span>
                   </div>
@@ -453,20 +452,20 @@ export default function Stats() {
           </section>
 
           {/* Detailed task table with filter */}
-          <section className=" border border-gray-500/80 rounded-2xl p-4 space-y-3">
+          <section className="bg-white/60 rounded-2xl p-4 space-y-3">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
               <div>
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-semibold text-indigo-400">
                   Detailed task timeline
                 </span>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-xs text-gray-500">
                   How each task moved from creation to completion.
                 </p>
               </div>
 
               {/* Filter buttons */}
               <div className="flex items-center gap-1 text-[11px]">
-                <span className="text-gray-300 mr-1">Filter:</span>
+                <span className="text-gray-500 mr-1">Filter:</span>
                 {[
                   { id: "all", label: "All" },
                   { id: "completed", label: "Completed" },
@@ -479,10 +478,10 @@ export default function Stats() {
                       key={f.id}
                       type="button"
                       onClick={() => setTableFilter(f.id)}
-                      className={`px-2 py-1 rounded-full border text-[11px] ${
+                      className={`px-2 py-1 rounded-full text-[11px] cursor-pointer ${
                         active
-                          ? "bg-indigo-600 border-indigo-500 text-gray-900"
-                          : " border-gray-500/80 text-gray-300 hover:border-indigo-500/60"
+                          ? "bg-indigo-600  text-white"
+                          : " text-gray-500 "
                       }`}
                     >
                       {f.label}
@@ -493,14 +492,14 @@ export default function Stats() {
             </div>
 
             {filteredTasksWithMeta.length === 0 ? (
-              <div className="text-xs text-gray-500">
-                No tasks match this filter in the current scope.
+              <div className="text-xs font-medium text-gray-600">
+                No tasks in current scope.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full text-xs md:text-sm text-left border-separate border-spacing-y-1">
                   <thead>
-                    <tr className="text-[11px] uppercase text-gray-300">
+                    <tr className="text-[11px] uppercase text-gray-700">
                       <th className="px-3 py-1">Task</th>
                       <th className="px-3 py-1">Added on</th>
                       <th className="px-3 py-1">Due date</th>
@@ -522,59 +521,59 @@ export default function Stats() {
 
                         let onTimeLabel = "—";
                         let onTimeClass =
-                          "px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-[10px]";
+                          "px-2 py-1 rounded-full bg-gray-200 text-gray-700 text-[10px]";
 
                         if (t.status !== "done") {
                           onTimeLabel = "Not completed";
                           onTimeClass =
-                            "px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-[10px]";
+                            "px-2 py-1 rounded-full border border-gray-900/60 bg-gray-500/15 text-gray-900 text-[11px]";
                         } else if (!m.dueDate) {
                           onTimeLabel = "No due date";
                           onTimeClass =
-                            "px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-[10px]";
+                            "px-2 py-1 rounded-full text-gray-800 text-[11px]";
                         } else if (m.completedAfterDue === false) {
                           onTimeLabel = "On time";
                           onTimeClass =
-                            "px-2 py-0.5 rounded-full text-emerald-400 border border-emerald-500/80 text-[10px]";
+                            "px-2 py-1 rounded-full text-emerald-700 bg-emerald-500/15 border border-emerald-500/60 text-[11px]";
                         } else if (m.completedAfterDue === true) {
                           onTimeLabel = "Late";
                           onTimeClass =
-                            "px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-200 border border-rose-500/60 text-[10px]";
+                            "px-2 py-1 rounded-full bg-rose-500/15 text-rose-700 border border-rose-500/60 text-[11px]";
                         }
 
                         return (
                           <tr
                             key={t._id}
-                            className="bg-gray-700 border border-gray-500/80 rounded-xl"
+                            className="rounded-xl"
                           >
-                            <td className="px-3 py-2 rounded-l-xl max-w-xs">
-                              <div className="font-medium text-gray-300 truncate">
+                            <td className="px-3 py-2 rounded-xl max-w-xs bg-indigo-200 ">
+                              <div className="font-medium text-indigo-500 truncate">
                                 {t.title}
                               </div>
                               {t.description && (
-                                <div className="text-[11px] text-gray-500 line-clamp-1">
+                                <div className="text-[11px] text-indigo-200 line-clamp-1">
                                   {t.description}
                                 </div>
                               )}
                             </td>
-                            <td className="px-3 py-2 text-gray-300">
+                            <td className="px-3 py-2 text-gray-500 rounded-xl text-[12px]">
                               {formatDate(m.createdAt)}
                             </td>
-                            <td className="px-3 py-2 text-gray-300">
+                            <td className="px-3 py-2 text-rose-500 rounded-xl text-[12px]">
                               {formatDate(m.dueDate)}
                             </td>
-                            <td className="px-3 py-2 text-gray-300">
+                            <td className="px-3 py-2 text-[12px] rounded-xl text-emerald-500">
                               {formatDate(m.completedAt)}
                             </td>
                             <td className="px-3 py-2">
                               <span className={onTimeClass}>{onTimeLabel}</span>
                             </td>
                             <td className="px-3 py-2 rounded-r-xl text-right">
-                              <span className="inline-flex items-center justify-end gap-1 text-gray-300">
-                                <span className="font-semibold">
+                              <span className="inline-flex items-center justify-end gap-1">
+                                <span className="font-semibold text-gray-900">
                                   {m.score}
                                 </span>
-                                <span className="text-[11px] text-gray-9000">
+                                <span className="text-[11px] text-gray-900">
                                   /10
                                 </span>
                               </span>
@@ -590,5 +589,6 @@ export default function Stats() {
         </>
       )}
     </motion.div>
+  </div>
   );
 }
